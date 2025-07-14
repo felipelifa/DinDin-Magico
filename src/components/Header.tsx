@@ -142,9 +142,14 @@ const Header = () => {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 p-2">
-                  <User className="h-5 w-5" />
-                </Button>
+               <Button
+  variant="ghost"
+  size="sm"
+  className="text-white hover:bg-white/10 p-2 min-w-0 max-w-[44px] sm:max-w-none"
+>
+  <User className="h-5 w-5" />
+</Button>
+
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-card">
                 <DropdownMenuItem className="text-sm text-muted-foreground">
