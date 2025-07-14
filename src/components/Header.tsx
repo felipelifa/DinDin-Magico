@@ -25,7 +25,7 @@ const Header = () => {
   return (
     <header className="bg-gradient-primary shadow-soft sticky top-0 z-50">
       <div className="w-full px-3 md:px-4 py-2 md:py-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between w-full max-w-full gap-1">
           <Link to="/dashboard" className="flex items-center space-x-1 md:space-x-2">
             <Sparkles className="text-white h-6 w-6 md:h-8 md:w-8" />
             <h1 className="text-white text-lg md:text-2xl font-bold">DinDinMágico</h1>
@@ -86,15 +86,14 @@ const Header = () => {
               </Link>
               
               {isInstallable && (
-                <Button 
-                  onClick={handleInstallApp}
-                  variant="ghost" 
-                  size="sm"
-                  className="text-white hover:bg-white/10"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Instalar App
-                </Button>
+               <Button 
+                onClick={handleInstallApp}
+                 variant="ghost" 
+                   size="sm"
+                    className="text-white hover:bg-white/10 p-2 min-w-0 max-w-[44px] sm:max-w-none hidden sm:inline-flex"
+                      >
+                    <Download className="h-5 w-5" />
+                      </Button>
               )}
             </div>
             
