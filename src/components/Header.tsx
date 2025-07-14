@@ -23,22 +23,22 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-gradient-primary shadow-soft sticky top-0 z-50">
-      <div className="w-full px-3 md:px-4 py-2 md:py-3">
+    <header className="bg-gradient-primary shadow-soft sticky top-0 z-50 w-full max-w-full overflow-x-hidden">
+      <div className="w-full max-w-full px-3 md:px-4 py-2 md:py-3">
         <div className="flex flex-wrap items-center justify-between w-full max-w-full gap-1">
-          <Link to="/dashboard" className="flex items-center space-x-1 md:space-x-2">
-            <Sparkles className="text-white h-6 w-6 md:h-8 md:w-8" />
-            <h1 className="text-white text-lg md:text-2xl font-bold">DinDinMágico</h1>
+          <Link to="/dashboard" className="flex items-center space-x-1 md:space-x-2 min-w-0">
+            <Sparkles className="text-white h-6 w-6 md:h-8 md:w-8 flex-shrink-0" />
+            <h1 className="text-white text-lg md:text-2xl font-bold truncate">DinDinMágico</h1>
           </Link>
           
-          <div className="flex items-center gap-1">
-
-            <div className="hidden lg:flex items-center space-x-4">
-              <Link to="/dashboard">
+          <div className="flex items-center flex-nowrap gap-1 max-w-full">
+            {/* Desktop menu */}
+            <div className="hidden lg:flex items-center flex-nowrap space-x-2">
+              <Link to="/dashboard" className="min-w-0">
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className={`text-white hover:bg-white/10 ${
+                  className={`text-white hover:bg-white/10 whitespace-nowrap ${
                     location.pathname === '/dashboard' ? 'bg-white/20' : ''
                   }`}
                 >
@@ -47,11 +47,11 @@ const Header = () => {
                 </Button>
               </Link>
               
-              <Link to="/reports">
+              <Link to="/reports" className="min-w-0">
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className={`text-white hover:bg-white/10 ${
+                  className={`text-white hover:bg-white/10 whitespace-nowrap ${
                     location.pathname === '/reports' ? 'bg-white/20' : ''
                   }`}
                 >
@@ -60,11 +60,11 @@ const Header = () => {
                 </Button>
               </Link>
               
-              <Link to="/goals">
+              <Link to="/goals" className="min-w-0">
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className={`text-white hover:bg-white/10 ${
+                  className={`text-white hover:bg-white/10 whitespace-nowrap ${
                     location.pathname === '/goals' ? 'bg-white/20' : ''
                   }`}
                 >
@@ -73,11 +73,11 @@ const Header = () => {
                 </Button>
               </Link>
               
-              <Link to="/settings">
+              <Link to="/settings" className="min-w-0">
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className={`text-white hover:bg-white/10 ${
+                  className={`text-white hover:bg-white/10 whitespace-nowrap ${
                     location.pathname === '/settings' ? 'bg-white/20' : ''
                   }`}
                 >
@@ -87,26 +87,27 @@ const Header = () => {
               </Link>
               
               {isInstallable && (
-               <Button 
-                onClick={handleInstallApp}
-                 variant="ghost" 
-                   size="sm"
-                    className="text-white hover:bg-white/10 p-2 min-w-0 max-w-[44px] sm:max-w-none hidden sm:inline-flex"
-                      >
-                    <Download className="h-5 w-5" />
-                      </Button>
+                <Button 
+                  onClick={handleInstallApp}
+                  variant="ghost" 
+                  size="sm"
+                  className="text-white hover:bg-white/10 whitespace-nowrap"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Instalar App
+                </Button>
               )}
             </div>
             
             {/* Menu mobile */}
-            <div className="lg:hidden">
+            <div className="lg:hidden flex-shrink-0">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 p-2">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-card">
+                <DropdownMenuContent align="end" className="bg-card min-w-[170px]">
                   <Link to="/dashboard">
                     <DropdownMenuItem className={location.pathname === '/dashboard' ? 'bg-accent' : ''}>
                       <CreditCard className="h-4 w-4 mr-2" />
@@ -143,17 +144,16 @@ const Header = () => {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-               <Button
-  variant="ghost"
-  size="sm"
-  className="text-white hover:bg-white/10 p-2 min-w-0 max-w-[44px] sm:max-w-none"
->
-  <User className="h-5 w-5" />
-</Button>
-
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/10 p-2 min-w-0"
+                >
+                  <User className="h-5 w-5" />
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-card">
-                <DropdownMenuItem className="text-sm text-muted-foreground">
+              <DropdownMenuContent align="end" className="bg-card min-w-[170px]">
+                <DropdownMenuItem className="text-sm text-muted-foreground break-all">
                   {user?.email}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={signOut} className="text-red-600">
