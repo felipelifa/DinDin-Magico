@@ -57,7 +57,7 @@ const PWAPrompt = () => {
 
   return (
     <AlertDialog open={showPrompt}>
-      <AlertDialogContent className="max-w-[95vw] md:max-w-md w-full">
+      <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <div className="flex items-center space-x-3 mb-4">
             <div className="bg-gradient-primary rounded-full p-3">
