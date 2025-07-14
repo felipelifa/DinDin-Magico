@@ -51,7 +51,7 @@ const PWAInstallBanner = () => {
   if (!showBanner || isInstalled) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm">
+   <div className="fixed bottom-2 left-1/2 -translate-x-1/2 w-[95vw] max-w-md z-50 px-2">
       <Card className="bg-gradient-primary shadow-magical border-primary/20 p-4">
         <div className="flex items-start space-x-3">
           <div className="bg-white/20 rounded-full p-2 flex-shrink-0">
