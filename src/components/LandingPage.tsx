@@ -28,29 +28,28 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5">
+    <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-background via-primary/5 to-accent/5">
       {/* Header */}
-      <header className="bg-gradient-hero shadow-magical sticky top-0 z-50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-gradient-hero shadow-magical sticky top-0 z-50 backdrop-blur-sm w-full max-w-full">
+        <div className="container mx-auto px-4 py-4 w-full max-w-full">
           <div className="flex flex-wrap items-center justify-between w-full gap-2">
-
-            <div className="flex items-center space-x-2">
-              <Sparkles className="text-white h-8 w-8" />
-              <h1 className="text-white text-2xl font-bold">DinDinMágico</h1>
+            <div className="flex items-center gap-2 min-w-0">
+              <Sparkles className="text-white h-8 w-8 flex-shrink-0" />
+              <h1 className="text-white text-2xl font-bold truncate">DinDinMágico</h1>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2 min-w-0">
               {isInstallable && (
                 <Button 
                   onClick={handleInstallApp}
                   variant="ghost" 
                   size="sm"
-                  className="text-white hover:bg-white/10 border border-white/20"
+                  className="text-white hover:bg-white/10 border border-white/20 min-w-0 whitespace-nowrap"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Instalar App
                 </Button>
               )}
-              <Button asChild variant="accent" className="shadow-card">
+              <Button asChild variant="accent" className="shadow-card min-w-0 whitespace-nowrap">
                 <a href="/dashboard">🚀 Entrar no App</a>
               </Button>
             </div>
@@ -75,7 +74,7 @@ const LandingPage = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="success" className="text-lg px-8 py-3">
+            <Button asChild size="lg" variant="success" className="text-lg px-8 py-3 whitespace-nowrap">
               <a href="/dashboard">🚀 Experimente Grátis</a>
             </Button>
             {isInstallable && (
@@ -83,13 +82,13 @@ const LandingPage = () => {
                 onClick={handleInstallApp}
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-3 hover:shadow-card border-primary/30 hover:bg-primary/10"
+                className="text-lg px-8 py-3 hover:shadow-card border-primary/30 hover:bg-primary/10 whitespace-nowrap"
               >
                 <Smartphone className="h-5 w-5 mr-2" />
                 📱 Instalar App
               </Button>
             )}
-            <Button asChild size="lg" variant="outline" className="text-lg px-8 py-3 hover:shadow-card">
+            <Button asChild size="lg" variant="outline" className="text-lg px-8 py-3 hover:shadow-card whitespace-nowrap">
               <a href="#features">📊 Ver Funcionalidades</a>
             </Button>
           </div>
@@ -258,7 +257,7 @@ const LandingPage = () => {
                   </div>
                 </div>
                 
-                <Button asChild variant="success" className="w-full text-lg py-3">
+                <Button asChild variant="success" className="w-full text-lg py-3 whitespace-nowrap">
                   <a href="/dashboard">✨ Experimentar Grátis - 7 Dias</a>
                 </Button>
                 
@@ -274,7 +273,7 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="bg-foreground/5 py-12">
         <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
+          <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">DinDinMágico</span>
           </div>
