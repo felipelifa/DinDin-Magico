@@ -32,7 +32,8 @@ const LandingPage = () => {
       {/* Header */}
       <header className="bg-gradient-hero shadow-magical sticky top-0 z-50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between w-full gap-2">
+
             <div className="flex items-center space-x-2">
               <Sparkles className="text-white h-8 w-8" />
               <h1 className="text-white text-2xl font-bold">DinDinMágico</h1>
