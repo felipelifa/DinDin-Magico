@@ -249,30 +249,42 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          dream_steps: number | null
           email: string | null
           full_name: string | null
           id: string
           is_premium: boolean | null
+          last_activity_streak: number | null
+          main_dream: string | null
+          onboarding_completed: boolean | null
           subscription_status: string | null
           trial_end_date: string | null
           trial_start_date: string | null
         }
         Insert: {
           created_at?: string
+          dream_steps?: number | null
           email?: string | null
           full_name?: string | null
           id: string
           is_premium?: boolean | null
+          last_activity_streak?: number | null
+          main_dream?: string | null
+          onboarding_completed?: boolean | null
           subscription_status?: string | null
           trial_end_date?: string | null
           trial_start_date?: string | null
         }
         Update: {
           created_at?: string
+          dream_steps?: number | null
           email?: string | null
           full_name?: string | null
           id?: string
           is_premium?: boolean | null
+          last_activity_streak?: number | null
+          main_dream?: string | null
+          onboarding_completed?: boolean | null
           subscription_status?: string | null
           trial_end_date?: string | null
           trial_start_date?: string | null
@@ -404,6 +416,33 @@ export type Database = {
           plan_type?: string
           status?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          created_at: string | null
+          id: string
+          progress: number | null
+          unlocked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          created_at?: string | null
+          id?: string
+          progress?: number | null
+          unlocked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          created_at?: string | null
+          id?: string
+          progress?: number | null
+          unlocked_at?: string | null
           user_id?: string
         }
         Relationships: []

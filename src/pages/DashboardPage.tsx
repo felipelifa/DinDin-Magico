@@ -1,7 +1,7 @@
-import Dashboard from "@/components/Dashboard";
+import OnboardingWrapper from "@/components/OnboardingWrapper";
 
 const DashboardPage = () => {
-  return <Dashboard />;
+  return <OnboardingWrapper />;
 };
 
 export default DashboardPage;

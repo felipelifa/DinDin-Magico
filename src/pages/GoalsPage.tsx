@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Plus, Target, Calendar, TrendingUp } from "lucide-react";
+import { Plus, Target, Calendar, TrendingUp, PiggyBank } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import GoalManager from "@/components/GoalManager";
+import AddGoalAmountDialog from "@/components/AddGoalAmountDialog";
 
 interface Goal {
   id: string;
@@ -23,6 +24,8 @@ const GoalsPage = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [showGoalManager, setShowGoalManager] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+  const [showAddAmountDialog, setShowAddAmountDialog] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -75,6 +78,16 @@ const GoalsPage = () => {
     }).format(amount);
   };
 
+  const openAddAmountDialog = (goal: Goal) => {
+    setSelectedGoal(goal);
+    setShowAddAmountDialog(true);
+  };
+
+  const closeAddAmountDialog = () => {
+    setSelectedGoal(null);
+    setShowAddAmountDialog(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -108,7 +121,7 @@ const GoalsPage = () => {
           
           <Button
             onClick={() => setShowGoalManager(true)}
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 bg-gradient-magical"
           >
             <Plus className="h-4 w-4" />
             <span>Nova Meta</span>
@@ -123,13 +136,9 @@ const GoalsPage = () => {
               <p className="text-muted-foreground mb-6">
                 Comece definindo seus objetivos financeiros para manter o foco
               </p>
-              <Button
-                onClick={() => setShowGoalManager(true)}
-                className="flex items-center space-x-2"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Criar Primeira Meta</span>
-              </Button>
+              <p className="text-sm text-muted-foreground">
+                Use o botão "Nova Meta" acima para começar
+              </p>
             </CardContent>
           </Card>
         ) : (
@@ -186,12 +195,23 @@ const GoalsPage = () => {
                       <span>Prazo: {goal.deadline}</span>
                     </div>
                     
-                    {progress >= 100 && (
+                    {progress >= 100 ? (
                       <div className="text-center py-2">
                         <div className="inline-flex items-center space-x-2 text-success bg-success/10 px-3 py-1 rounded-full">
                           <TrendingUp className="h-4 w-4" />
                           <span className="text-sm font-medium">Meta Alcançada! 🎉</span>
                         </div>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <Button
+                          size="sm"
+                          onClick={() => openAddAmountDialog(goal)}
+                          className="w-full"
+                        >
+                          <PiggyBank className="h-4 w-4 mr-2" />
+                          Adicionar Valor
+                        </Button>
                       </div>
                     )}
                   </CardContent>
@@ -201,8 +221,25 @@ const GoalsPage = () => {
           </div>
         )}
 
+        {/* Add Amount Dialog */}
+        {selectedGoal && (
+          <AddGoalAmountDialog
+            isOpen={showAddAmountDialog}
+            onClose={closeAddAmountDialog}
+            goal={selectedGoal}
+            onAmountAdded={fetchGoals}
+          />
+        )}
+
         {showGoalManager && (
-          <GoalManager />
+          <GoalManager onGoalsUpdate={(updatedGoals) => {
+            // Converter os dados para o formato esperado pela página
+            const formattedGoals = updatedGoals.map(goal => ({
+              ...goal,
+              created_at: new Date().toISOString() // Adiciona created_at para compatibilidade
+            }));
+            setGoals(formattedGoals);
+          }} />
         )}
       </main>
     </div>

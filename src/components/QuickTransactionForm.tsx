@@ -10,6 +10,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useDateContext } from "@/contexts/DateContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import PremiumGuard from "./PremiumGuard";
+import { useSubscription } from "@/hooks/useSubscription";
 
 interface Transaction {
   amount: number;
@@ -37,6 +39,7 @@ const QuickTransactionForm = () => {
   const { user } = useAuth();
   const { triggerRefresh } = useDateContext();
   const { toast } = useToast();
+  const { hasAccess } = useSubscription();
 
   // Inicializar reconhecimento de voz
   useEffect(() => {
@@ -460,118 +463,135 @@ const QuickTransactionForm = () => {
           </div>
           
           <TabsContent value="expense" className="space-y-3 md:space-y-4 mt-3 md:mt-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="expense-amount" className="text-xs md:text-sm">Valor</Label>
-                <Input
-                  id="expense-amount"
-                  type="number"
-                  placeholder="0,00"
-                  className="h-9 md:h-10 text-sm"
-                  value={expenseData.amount || ""}
-                  onChange={(e) => setExpenseData({...expenseData, amount: Number(e.target.value)})}
-                />
+            <PremiumGuard feature="adicionar novos gastos">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="expense-amount" className="text-xs md:text-sm">Valor</Label>
+                  <Input
+                    id="expense-amount"
+                    type="number"
+                    placeholder="0,00"
+                    className="h-9 md:h-10 text-sm"
+                    value={expenseData.amount || ""}
+                    onChange={(e) => setExpenseData({...expenseData, amount: Number(e.target.value)})}
+                    disabled={!hasAccess}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="expense-category" className="text-xs md:text-sm">Categoria</Label>
+                  <Select 
+                    value={expenseData.category} 
+                    onValueChange={(value) => setExpenseData({...expenseData, category: value})}
+                    disabled={!hasAccess}
+                  >
+                    <SelectTrigger className="h-9 md:h-10 text-sm">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {expenseCategories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {getCategoryEmoji(category, 'expense')} {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="expense-description" className="text-xs md:text-sm">Descrição</Label>
+                  <Input
+                    id="expense-description"
+                    placeholder="Ex: Almoço no restaurante"
+                    className="h-9 md:h-10 text-sm"
+                    value={expenseData.description}
+                    onChange={(e) => setExpenseData({...expenseData, description: e.target.value})}
+                    disabled={!hasAccess}
+                  />
+                </div>
+                
+                <div className="flex items-end">
+                  <Button 
+                    onClick={addExpense}
+                    disabled={loading || !hasAccess}
+                    className="w-full h-9 md:h-10 text-xs md:text-sm"
+                    variant="destructive"
+                  >
+                    {loading ? "Salvando..." : "Adicionar Gasto"}
+                  </Button>
+                </div>
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="expense-category" className="text-xs md:text-sm">Categoria</Label>
-                <Select value={expenseData.category} onValueChange={(value) => setExpenseData({...expenseData, category: value})}>
-                  <SelectTrigger className="h-9 md:h-10 text-sm">
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {expenseCategories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {getCategoryEmoji(category, 'expense')} {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="expense-description" className="text-xs md:text-sm">Descrição</Label>
-                <Input
-                  id="expense-description"
-                  placeholder="Ex: Almoço no restaurante"
-                  className="h-9 md:h-10 text-sm"
-                  value={expenseData.description}
-                  onChange={(e) => setExpenseData({...expenseData, description: e.target.value})}
-                />
-              </div>
-              
-              <div className="flex items-end">
-                <Button 
-                  onClick={addExpense}
-                  disabled={loading}
-                  className="w-full h-9 md:h-10 text-xs md:text-sm"
-                  variant="destructive"
-                >
-                  {loading ? "Salvando..." : "Adicionar Gasto"}
-                </Button>
-              </div>
-            </div>
+            </PremiumGuard>
           </TabsContent>
           
+          
           <TabsContent value="income" className="space-y-3 md:space-y-4 mt-3 md:mt-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="income-amount" className="text-xs md:text-sm">Valor</Label>
-                <Input
-                  id="income-amount"
-                  type="number"
-                  placeholder="0,00"
-                  className="h-9 md:h-10 text-sm"
-                  value={incomeData.amount || ""}
-                  onChange={(e) => setIncomeData({...incomeData, amount: Number(e.target.value)})}
-                />
+            <PremiumGuard feature="adicionar novas receitas">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="income-amount" className="text-xs md:text-sm">Valor</Label>
+                  <Input
+                    id="income-amount"
+                    type="number"
+                    placeholder="0,00"
+                    className="h-9 md:h-10 text-sm"
+                    value={incomeData.amount || ""}
+                    onChange={(e) => setIncomeData({...incomeData, amount: Number(e.target.value)})}
+                    disabled={!hasAccess}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="income-category" className="text-xs md:text-sm">Categoria</Label>
+                  <Select 
+                    value={incomeData.category} 
+                    onValueChange={(value) => setIncomeData({...incomeData, category: value})}
+                    disabled={!hasAccess}
+                  >
+                    <SelectTrigger className="h-9 md:h-10 text-sm">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                       {incomeCategories.map((category) => (
+                         <SelectItem key={category} value={category}>
+                           {getCategoryEmoji(category, 'income')} {
+                             category === 'salary' ? 'Salário' :
+                             category === 'freelance' ? 'Freelance' :
+                             category === 'sales' ? 'Vendas' :
+                             category === 'investment' ? 'Investimentos' :
+                             category === 'gift' ? 'Presente' :
+                             category === 'cashback' ? 'Cashback' :
+                             'Outros'
+                           }
+                         </SelectItem>
+                       ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="income-description" className="text-xs md:text-sm">Descrição</Label>
+                  <Input
+                    id="income-description"
+                    placeholder="Ex: Salário do mês"
+                    className="h-9 md:h-10 text-sm"
+                    value={incomeData.description}
+                    onChange={(e) => setIncomeData({...incomeData, description: e.target.value})}
+                    disabled={!hasAccess}
+                  />
+                </div>
+                
+                <div className="flex items-end">
+                  <Button 
+                    onClick={addIncome}
+                    disabled={loading || !hasAccess}
+                    className="w-full bg-success hover:bg-success/90 text-success-foreground h-9 md:h-10 text-xs md:text-sm"
+                  >
+                    {loading ? "Salvando..." : "Adicionar Entrada"}
+                  </Button>
+                </div>
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="income-category" className="text-xs md:text-sm">Categoria</Label>
-                <Select value={incomeData.category} onValueChange={(value) => setIncomeData({...incomeData, category: value})}>
-                  <SelectTrigger className="h-9 md:h-10 text-sm">
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                     {incomeCategories.map((category) => (
-                       <SelectItem key={category} value={category}>
-                         {getCategoryEmoji(category, 'income')} {
-                           category === 'salary' ? 'Salário' :
-                           category === 'freelance' ? 'Freelance' :
-                           category === 'sales' ? 'Vendas' :
-                           category === 'investment' ? 'Investimentos' :
-                           category === 'gift' ? 'Presente' :
-                           category === 'cashback' ? 'Cashback' :
-                           'Outros'
-                         }
-                       </SelectItem>
-                     ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="income-description" className="text-xs md:text-sm">Descrição</Label>
-                <Input
-                  id="income-description"
-                  placeholder="Ex: Salário do mês"
-                  className="h-9 md:h-10 text-sm"
-                  value={incomeData.description}
-                  onChange={(e) => setIncomeData({...incomeData, description: e.target.value})}
-                />
-              </div>
-              
-              <div className="flex items-end">
-                <Button 
-                  onClick={addIncome}
-                  disabled={loading}
-                  className="w-full bg-success hover:bg-success/90 text-success-foreground h-9 md:h-10 text-xs md:text-sm"
-                >
-                  {loading ? "Salvando..." : "Adicionar Entrada"}
-                </Button>
-              </div>
-            </div>
+            </PremiumGuard>
           </TabsContent>
         </Tabs>
       </CardContent>

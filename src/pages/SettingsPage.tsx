@@ -2,14 +2,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Settings, Moon, Sun, Bell, Palette, Shield, LogOut } from "lucide-react";
+import { Settings, Moon, Sun, Bell, Palette, Shield, LogOut, Crown, CreditCard, Calendar } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useState } from "react";
+import SubscriptionModal from "@/components/SubscriptionModal";
 
 const SettingsPage = () => {
   const { signOut } = useAuth();
   const { toast } = useToast();
+  const { isPremium, subscriptionStatus, trialEndDate, trialDaysLeft, isTrialActive } = useSubscription();
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -40,6 +45,102 @@ const SettingsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Status da Assinatura */}
+          <Card className="shadow-magical lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Crown className="h-5 w-5 text-primary" />
+                <span>Status da Assinatura</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Status atual */}
+                <div className="space-y-2">
+                  <Label>Plano Atual</Label>
+                  <div className={`p-3 rounded-lg border ${
+                    isPremium 
+                      ? 'bg-primary/10 border-primary/20 text-primary' 
+                      : isTrialActive 
+                        ? 'bg-blue-50 border-blue-200 text-blue-800'
+                        : 'bg-gray-50 border-gray-200 text-gray-600'
+                  }`}>
+                    <div className="flex items-center space-x-2">
+                      {isPremium ? (
+                        <>
+                          <Crown className="h-4 w-4" />
+                          <span className="font-semibold">Premium</span>
+                        </>
+                      ) : isTrialActive ? (
+                        <>
+                          <Calendar className="h-4 w-4" />
+                          <span className="font-semibold">Teste Grátis</span>
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="h-4 w-4" />
+                          <span className="font-semibold">Limitado</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Status */}
+                <div className="space-y-2">
+                  <Label>Status</Label>
+                  <div className="p-3 rounded-lg bg-muted">
+                    <span className="capitalize">{subscriptionStatus}</span>
+                  </div>
+                </div>
+
+                {/* Informações de validade */}
+                <div className="space-y-2">
+                  <Label>
+                    {isPremium ? 'Renovação' : isTrialActive ? 'Teste expira em' : 'Teste expirou'}
+                  </Label>
+                  <div className="p-3 rounded-lg bg-muted">
+                    {isTrialActive ? (
+                      <span className={trialDaysLeft <= 3 ? 'text-red-600 font-semibold' : ''}>
+                        {trialDaysLeft} dias
+                      </span>
+                    ) : trialEndDate ? (
+                      <span className="text-sm">
+                        {new Date(trialEndDate).toLocaleDateString('pt-BR')}
+                      </span>
+                    ) : (
+                      <span className="text-sm">-</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Ações */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                {!isPremium && (
+                  <Button 
+                    onClick={() => setShowSubscriptionModal(true)}
+                    className="bg-gradient-magical text-white hover:opacity-90 flex-1"
+                  >
+                    <Crown className="h-4 w-4 mr-2" />
+                    {isTrialActive ? 'Assinar Premium' : 'Reativar Premium'}
+                  </Button>
+                )}
+                
+                {isPremium && (
+                  <Button variant="outline" className="flex-1">
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Gerenciar Assinatura
+                  </Button>
+                )}
+                
+                <Button variant="ghost" className="flex-1">
+                  Ver Histórico de Pagamentos
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Aparência */}
           <Card className="shadow-magical">
             <CardHeader>
@@ -183,6 +284,11 @@ const SettingsPage = () => {
           </Card>
         </div>
       </main>
+
+      <SubscriptionModal 
+        isOpen={showSubscriptionModal} 
+        onClose={() => setShowSubscriptionModal(false)} 
+      />
     </div>
   );
 };

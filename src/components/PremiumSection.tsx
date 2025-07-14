@@ -1,10 +1,19 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BarChart3, MessageCircle, Share2, Gift } from "lucide-react";
+import SubscriptionModal from "./SubscriptionModal";
 
 const PremiumSection = () => {
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+
   return (
-    <div className="space-y-6">
+    <>
+      <SubscriptionModal 
+        isOpen={showSubscriptionModal} 
+        onClose={() => setShowSubscriptionModal(false)} 
+      />
+      <div className="space-y-6">
       {/* WhatsApp Integration */}
       <Card className="shadow-soft">
         <CardHeader>
@@ -57,14 +66,19 @@ const PremiumSection = () => {
               <p className="text-sm text-white/80">
                 Mais metas, relatórios detalhados e rankings!
               </p>
-              <Button className="mt-2 bg-white text-accent hover:bg-white/90" size="sm">
+              <Button 
+                className="mt-2 bg-white text-accent hover:bg-white/90" 
+                size="sm"
+                onClick={() => setShowSubscriptionModal(true)}
+              >
                 Assinar por R$ 9,90/mês
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </>
   );
 };
 

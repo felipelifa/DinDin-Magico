@@ -1,12 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, Menu, User, LogOut, BarChart3, Target, Settings, CreditCard } from "lucide-react";
+import { Sparkles, Menu, User, LogOut, BarChart3, Target, Settings, CreditCard, Download } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Link, useLocation } from "react-router-dom";
+import { usePWA } from "@/hooks/usePWA";
+import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
   const { user, signOut } = useAuth();
   const location = useLocation();
+  const { isInstallable, installApp } = usePWA();
+  const { toast } = useToast();
+
+  const handleInstallApp = async () => {
+    const success = await installApp();
+    if (success) {
+      toast({
+        title: "App instalado! 🎉",
+        description: "DinDin Mágico foi instalado em seu dispositivo",
+      });
+    }
+  };
 
   return (
     <header className="bg-gradient-primary shadow-soft sticky top-0 z-50">
@@ -70,6 +84,18 @@ const Header = () => {
                   Configurações
                 </Button>
               </Link>
+              
+              {isInstallable && (
+                <Button 
+                  onClick={handleInstallApp}
+                  variant="ghost" 
+                  size="sm"
+                  className="text-white hover:bg-white/10"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Instalar App
+                </Button>
+              )}
             </div>
             
             {/* Menu mobile */}
@@ -105,6 +131,12 @@ const Header = () => {
                       Configurações
                     </DropdownMenuItem>
                   </Link>
+                  {isInstallable && (
+                    <DropdownMenuItem onClick={handleInstallApp}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Instalar App
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Target, Plus, Edit, Trash2, Sparkles } from "lucide-react";
+import { Target, Plus, Edit, Trash2, Sparkles, PiggyBank } from "lucide-react";
 import GoalManager from "./GoalManager";
+import AddGoalAmountDialog from "./AddGoalAmountDialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -18,6 +19,8 @@ interface Goal {
 
 const GoalsSection = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+  const [showAddAmountDialog, setShowAddAmountDialog] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -51,6 +54,16 @@ const GoalsSection = () => {
     } catch (error: any) {
       console.error('Erro ao carregar metas:', error);
     }
+  };
+
+  const openAddAmountDialog = (goal: Goal) => {
+    setSelectedGoal(goal);
+    setShowAddAmountDialog(true);
+  };
+
+  const closeAddAmountDialog = () => {
+    setSelectedGoal(null);
+    setShowAddAmountDialog(false);
   };
 
   return (
@@ -105,17 +118,39 @@ const GoalsSection = () => {
                   <span className="text-xs text-muted-foreground">
                     Faltam R$ {(goal.target_amount - goal.current_amount).toFixed(2)}
                   </span>
-                  {progress >= 100 && (
-                    <span className="text-xs bg-success text-success-foreground px-2 py-1 rounded-full">
-                      Conquistado! 🎉
-                    </span>
-                  )}
+                  <div className="flex items-center space-x-2">
+                    {progress >= 100 ? (
+                      <span className="text-xs bg-success text-success-foreground px-2 py-1 rounded-full">
+                        Conquistado! 🎉
+                      </span>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openAddAmountDialog(goal)}
+                        className="h-7 px-2 text-xs"
+                      >
+                        <PiggyBank className="h-3 w-3 mr-1" />
+                        Adicionar
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
           })
         )}
       </CardContent>
+
+      {/* Add Amount Dialog */}
+      {selectedGoal && (
+        <AddGoalAmountDialog
+          isOpen={showAddAmountDialog}
+          onClose={closeAddAmountDialog}
+          goal={selectedGoal}
+          onAmountAdded={loadGoals}
+        />
+      )}
     </Card>
   );
 };
