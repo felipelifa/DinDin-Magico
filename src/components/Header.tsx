@@ -31,7 +31,8 @@ const Header = () => {
             <h1 className="text-white text-lg md:text-2xl font-bold">DinDinMágico</h1>
           </Link>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1">
+
             <div className="hidden lg:flex items-center space-x-4">
               <Link to="/dashboard">
                 <Button 
