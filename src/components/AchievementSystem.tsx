@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Trophy, Star, Target, Gift, TrendingUp, Calendar, Zap, Award } from 'lucide-react';
+import PremiumGuard from './PremiumGuard';
 import CelebrationModal from './CelebrationModal';
 
 interface Achievement {
@@ -301,13 +302,14 @@ const AchievementSystem = () => {
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-primary" />
-            Conquistas Mágicas
-          </CardTitle>
-        </CardHeader>
+      <PremiumGuard feature="sistema de conquistas">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Trophy className="h-5 w-5 text-primary" />
+              Conquistas Mágicas
+            </CardTitle>
+          </CardHeader>
         <CardContent>
           <div className="grid gap-4">
             {achievements.map((achievement) => {
@@ -358,6 +360,7 @@ const AchievementSystem = () => {
           </div>
         </CardContent>
       </Card>
+      </PremiumGuard>
 
       <CelebrationModal
         isOpen={celebrationModal.isOpen}

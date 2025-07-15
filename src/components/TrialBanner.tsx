@@ -9,10 +9,8 @@ const TrialBanner = () => {
   const { isTrialActive, trialDaysLeft, isPremium } = useSubscription();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
-  // Não mostrar se é premium ou se o trial já expirou
-  if (isPremium || !isTrialActive) {
-    return null;
-  }
+  // Não mostrar mais - sem período grátis
+  return null;
 
   const getUrgencyLevel = () => {
     if (trialDaysLeft <= 1) return "urgent";

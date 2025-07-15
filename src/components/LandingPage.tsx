@@ -1,101 +1,146 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Mic, Camera, MessageCircle, Target, BarChart3, Users, CheckCircle, Star, Download, Smartphone } from "lucide-react";
-import PWAInstallBanner from "@/components/PWAInstallBanner";
-import PWAPrompt from "@/components/PWAPrompt";
-import { usePWA } from "@/hooks/usePWA";
-import { useToast } from "@/hooks/use-toast";
+import { Sparkles, Mic, Camera, MessageCircle, Target, BarChart3, Users, CheckCircle, Star } from "lucide-react";
 
 const LandingPage = () => {
-  const { isInstallable, installApp } = usePWA();
-  const { toast } = useToast();
-
-  const handleInstallApp = async () => {
-    const success = await installApp();
-    if (success) {
-      toast({
-        title: "App instalado! 🎉",
-        description: "DinDin Mágico foi instalado em seu dispositivo",
-      });
-    } else {
-      toast({
-        title: "Instalação cancelada",
-        description: "Você pode tentar novamente a qualquer momento",
-        variant: "destructive"
-      });
-    }
-  };
-
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-background via-primary/5 to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5 overflow-x-hidden">
       {/* Header */}
-      <header className="bg-gradient-hero shadow-magical sticky top-0 z-50 backdrop-blur-sm w-full max-w-full">
-        <div className="container mx-auto px-4 py-4 w-full max-w-full">
-          <div className="flex flex-wrap items-center justify-between w-full gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <Sparkles className="text-white h-8 w-8 flex-shrink-0" />
-              <h1 className="text-white text-2xl font-bold truncate">DinDinMágico</h1>
+      <header className="bg-gradient-hero shadow-magical sticky top-0 z-50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-4 max-w-full">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="text-white h-8 w-8" />
+              <h1 className="text-white text-xl md:text-2xl font-bold">DinDinMágico</h1>
             </div>
-            <div className="flex items-center gap-2 min-w-0">
-              {isInstallable && (
-                <Button 
-                  onClick={handleInstallApp}
-                  variant="ghost" 
-                  size="sm"
-                  className="text-white hover:bg-white/10 border border-white/20 min-w-0 whitespace-nowrap"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Instalar App
-                </Button>
-              )}
-              <Button asChild variant="accent" className="shadow-card min-w-0 whitespace-nowrap">
-                <a href="/dashboard">🚀 Entrar no App</a>
-              </Button>
-            </div>
+            <Button asChild variant="accent" className="shadow-card px-3 md:px-4 py-2 text-sm md:text-base whitespace-nowrap">
+              <a href="/dashboard">🚀 Entrar no App</a>
+            </Button>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 text-center">
+      <section className="py-12 md:py-20 px-4 overflow-x-hidden">
+        <div className="container mx-auto text-center max-w-full">
           <Badge className="mb-6 bg-gradient-accent text-accent-foreground border-none text-lg px-4 py-2 shadow-card">
             ✨ Controle financeiro inteligente e divertido!
           </Badge>
           
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-hero bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-hero bg-clip-text text-transparent px-2">
             Controle financeiro simples e inteligente
           </h1>
           
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-2">
             Gerencie suas receitas, gastos fixos e variáveis, acompanhe suas metas 
             e tenha relatórios detalhados. Tudo em um só lugar! 💰
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="success" className="text-lg px-8 py-3 whitespace-nowrap">
-              <a href="/dashboard">🚀 Experimente Grátis</a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
+            <Button asChild size="lg" variant="success" className="text-base md:text-lg px-6 md:px-8 py-3 min-h-[48px] w-full sm:w-auto">
+              <a href="/dashboard">🚀 Entrar no App</a>
             </Button>
-            {isInstallable && (
-              <Button 
-                onClick={handleInstallApp}
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-3 hover:shadow-card border-primary/30 hover:bg-primary/10 whitespace-nowrap"
-              >
-                <Smartphone className="h-5 w-5 mr-2" />
-                📱 Instalar App
-              </Button>
-            )}
-            <Button asChild size="lg" variant="outline" className="text-lg px-8 py-3 hover:shadow-card whitespace-nowrap">
-              <a href="#features">📊 Ver Funcionalidades</a>
+            <Button asChild size="lg" variant="outline" className="text-base md:text-lg px-6 md:px-8 py-3 hover:shadow-card min-h-[48px] w-full sm:w-auto bg-background/95 backdrop-blur-sm">
+              <a href="/demo">👀 Clique aqui e veja como funciona</a>
             </Button>
           </div>
           
-          <p className="text-sm text-muted-foreground mt-4">
+          <p className="text-sm text-muted-foreground mt-4 px-2">
             ✅ Sem precisar conectar banco • ✅ Sem senhas complicadas • ✅ Resultado em dias
           </p>
+        </div>
+      </section>
+
+      {/* Modo Demo */}
+      <section id="demo" className="py-16 bg-gradient-to-r from-accent/5 to-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
+              🎮 Experimente antes de assinar
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Teste todas as funcionalidades sem compromisso
+            </p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <Card className="shadow-magical border-primary/30 hover:shadow-primary transition-all duration-300">
+              <CardContent className="p-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <div className="bg-gradient-accent rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-primary">
+                      <Sparkles className="h-8 w-8 text-accent-foreground" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 text-primary text-center">🎮 Modo Demonstração</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-3">
+                        <CheckCircle className="h-5 w-5 text-success mt-0.5" />
+                        <div>
+                          <p className="font-semibold">Funcionalidades completas</p>
+                          <p className="text-sm text-muted-foreground">Use praticamente todas as funções do app</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <CheckCircle className="h-5 w-5 text-success mt-0.5" />
+                        <div>
+                          <p className="font-semibold">Dados fictícios</p>
+                          <p className="text-sm text-muted-foreground">Exemplos realistas para você testar</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <CheckCircle className="h-5 w-5 text-success mt-0.5" />
+                        <div>
+                          <p className="font-semibold">Resetado automaticamente</p>
+                          <p className="text-sm text-muted-foreground">Dados são limpos quando você sai</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg p-6 border border-primary/20">
+                    <div className="bg-warning/10 border border-warning/30 rounded-lg p-4 mb-6">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-warning rounded-full animate-pulse"></div>
+                        <span className="text-sm font-medium text-warning-foreground">
+                          Você está no modo demonstração
+                        </span>
+                      </div>
+                      <p className="text-sm text-warning-foreground/80 mt-1">
+                        Nenhum dado é salvo permanentemente
+                      </p>
+                    </div>
+                    
+                    <h4 className="font-semibold mb-3 text-center">O que você vai encontrar:</h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center space-x-2">
+                        <span className="text-primary">📊</span>
+                        <span>Dashboard com dados de exemplo</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <span className="text-primary">💰</span>
+                        <span>Transações fictícias pré-carregadas</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <span className="text-primary">🎯</span>
+                        <span>Metas de exemplo configuradas</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <span className="text-primary">📈</span>
+                        <span>Relatórios com dados simulados</span>
+                      </li>
+                    </ul>
+                    
+                    <div className="mt-6 text-center">
+                      <Button asChild variant="success" className="w-full text-lg py-3">
+                        <a href="/demo">👀 Ver demonstração gratuita</a>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
@@ -208,6 +253,7 @@ const LandingPage = () => {
         </div>
       </section>
 
+
       {/* Preços */}
       <section className="py-16 bg-gradient-to-r from-primary/5 to-accent/5">
         <div className="container mx-auto px-4">
@@ -257,12 +303,12 @@ const LandingPage = () => {
                   </div>
                 </div>
                 
-                <Button asChild variant="success" className="w-full text-lg py-3 whitespace-nowrap">
-                  <a href="/dashboard">✨ Experimentar Grátis - 7 Dias</a>
+                <Button asChild variant="success" className="w-full text-lg py-3">
+                  <a href="/dashboard">✨ Começar Agora</a>
                 </Button>
                 
                 <p className="text-xs text-muted-foreground mt-4">
-                  Sem cartão • Cancele quando quiser • Seus dados protegidos
+                  Cancele quando quiser • Seus dados protegidos
                 </p>
               </CardContent>
             </Card>
@@ -273,7 +319,7 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="bg-foreground/5 py-12">
         <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
+          <div className="flex items-center justify-center space-x-2 mb-4">
             <Sparkles className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">DinDinMágico</span>
           </div>
@@ -285,12 +331,6 @@ const LandingPage = () => {
           </p>
         </div>
       </footer>
-      
-      {/* PWA Install Banner */}
-      <PWAInstallBanner />
-      
-      {/* PWA Install Prompt */}
-      <PWAPrompt />
     </div>
   );
 };

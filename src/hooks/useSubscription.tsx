@@ -6,9 +6,12 @@ export interface SubscriptionData {
   isPremium: boolean;
   subscriptionStatus: 'trial' | 'active' | 'expired' | 'cancelled';
   trialEndDate: Date | null;
+  subscriptionEndDate: Date | null;
   trialDaysLeft: number;
+  subscriptionDaysLeft: number;
   isTrialActive: boolean;
   hasAccess: boolean; // trial ativo ou premium
+  planType?: 'monthly' | 'yearly';
 }
 
 export const useSubscription = () => {
@@ -17,7 +20,9 @@ export const useSubscription = () => {
     isPremium: false,
     subscriptionStatus: 'trial',
     trialEndDate: null,
+    subscriptionEndDate: null,
     trialDaysLeft: 0,
+    subscriptionDaysLeft: 0,
     isTrialActive: false,
     hasAccess: false,
   });
@@ -30,34 +35,57 @@ export const useSubscription = () => {
     }
 
     try {
-      const { data, error } = await supabase
+      // Get profile data
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('is_premium, subscription_status, trial_end_date')
         .eq('id', user.id)
         .single();
 
-      if (error) {
-        console.error('Error fetching subscription data:', error);
+      if (profileError) {
+        console.error('Error fetching profile data:', profileError);
         return;
       }
 
+      // Get active subscription data
+      const { data: subscriptionData, error: subscriptionError } = await supabase
+        .from('subscriptions')
+        .select('expires_at, plan_type')
+        .eq('user_id', user.id)
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (subscriptionError) {
+        console.error('Error fetching subscription data:', subscriptionError);
+      }
+
       const now = new Date();
-      const trialEndDate = data.trial_end_date ? new Date(data.trial_end_date) : null;
+      const trialEndDate = profileData.trial_end_date ? new Date(profileData.trial_end_date) : null;
+      const subscriptionEndDate = subscriptionData?.[0]?.expires_at ? new Date(subscriptionData[0].expires_at) : null;
+      
       const trialDaysLeft = trialEndDate 
         ? Math.max(0, Math.ceil((trialEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
         : 0;
       
-      const isTrialActive = trialEndDate ? trialEndDate > now : false;
-      const isPremium = data.is_premium || false;
-      const hasAccess = isPremium || isTrialActive;
+      const subscriptionDaysLeft = subscriptionEndDate 
+        ? Math.max(0, Math.ceil((subscriptionEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
+        : 0;
+      
+      const isTrialActive = false; // Removido: trialEndDate ? trialEndDate > now : false;
+      const isPremium = profileData.is_premium || false;
+      const hasAccess = isPremium; // Removido: || isTrialActive;
 
       setSubscriptionData({
         isPremium,
-        subscriptionStatus: (data.subscription_status as 'trial' | 'active' | 'expired' | 'cancelled') || 'trial',
+        subscriptionStatus: isPremium ? 'active' : 'expired',
         trialEndDate,
+        subscriptionEndDate,
         trialDaysLeft,
+        subscriptionDaysLeft,
         isTrialActive,
         hasAccess,
+        planType: subscriptionData?.[0]?.plan_type as 'monthly' | 'yearly' | undefined,
       });
     } catch (error) {
       console.error('Error in fetchSubscriptionData:', error);

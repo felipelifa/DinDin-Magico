@@ -7,7 +7,6 @@ import QuickTransactionForm from "./QuickTransactionForm";
 import TrialBanner from "./TrialBanner";
 import SmartUpsell from "./SmartUpsell";
 import AchievementSystem from "./AchievementSystem";
-import PWAInstallBanner from "./PWAInstallBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { DateProvider, useDateContext } from "@/contexts/DateContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -176,9 +175,6 @@ const DashboardContent = () => {
           <TransactionHistory />
         </div>
       </main>
-      
-      {/* PWA Install Banner */}
-      <PWAInstallBanner />
     </div>
   );
 };

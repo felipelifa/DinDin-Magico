@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Settings, Moon, Sun, Bell, Palette, Shield, LogOut, Crown, CreditCard, Calendar } from "lucide-react";
+import { Settings, Bell, LogOut, Crown, CreditCard, Calendar, Shield, CheckCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
@@ -13,7 +13,7 @@ import SubscriptionModal from "@/components/SubscriptionModal";
 const SettingsPage = () => {
   const { signOut } = useAuth();
   const { toast } = useToast();
-  const { isPremium, subscriptionStatus, trialEndDate, trialDaysLeft, isTrialActive } = useSubscription();
+  const { isPremium, subscriptionStatus, trialEndDate, subscriptionEndDate, trialDaysLeft, subscriptionDaysLeft, isTrialActive, planType } = useSubscription();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   const handleSignOut = async () => {
@@ -45,132 +45,168 @@ const SettingsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Status da Assinatura */}
-          <Card className="shadow-magical lg:col-span-2">
-            <CardHeader>
+          {/* Sistema Inteligente de Assinatura */}
+          <Card className="shadow-magical lg:col-span-2 overflow-hidden">
+            <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <Crown className="h-5 w-5 text-primary" />
-                <span>Status da Assinatura</span>
+                <span>Sua Assinatura</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Status atual */}
-                <div className="space-y-2">
-                  <Label>Plano Atual</Label>
-                  <div className={`p-3 rounded-lg border ${
-                    isPremium 
-                      ? 'bg-primary/10 border-primary/20 text-primary' 
-                      : isTrialActive 
-                        ? 'bg-blue-50 border-blue-200 text-blue-800'
-                        : 'bg-gray-50 border-gray-200 text-gray-600'
-                  }`}>
-                    <div className="flex items-center space-x-2">
-                      {isPremium ? (
-                        <>
-                          <Crown className="h-4 w-4" />
-                          <span className="font-semibold">Premium</span>
-                        </>
-                      ) : isTrialActive ? (
-                        <>
-                          <Calendar className="h-4 w-4" />
-                          <span className="font-semibold">Teste Grátis</span>
-                        </>
-                      ) : (
-                        <>
-                          <Shield className="h-4 w-4" />
-                          <span className="font-semibold">Limitado</span>
-                        </>
+            <CardContent className="space-y-6">
+              {/* Banner de Status Inteligente */}
+              {isPremium ? (
+                // Usuario Premium Ativo
+                <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-primary/20 rounded-full p-2">
+                        <Crown className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-primary text-lg">Premium Ativo ✨</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {planType === 'yearly' ? 'Plano Anual' : 'Plano Mensal'} - Expira em: {subscriptionEndDate ? new Date(subscriptionEndDate).toLocaleDateString('pt-BR') : 'Em breve'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-primary">
+                        {planType === 'yearly' ? 'R$ 99,00' : 'R$ 9,90'}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        /{planType === 'yearly' ? 'ano' : 'mês'}
+                      </p>
+                      {subscriptionDaysLeft > 0 && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {subscriptionDaysLeft} dias restantes
+                        </p>
                       )}
                     </div>
                   </div>
                 </div>
-
-                {/* Status */}
-                <div className="space-y-2">
-                  <Label>Status</Label>
-                  <div className="p-3 rounded-lg bg-muted">
-                    <span className="capitalize">{subscriptionStatus}</span>
+              ) : isTrialActive ? (
+                // Usuario em Teste Gratis
+                <div className={`bg-gradient-to-r ${
+                  trialDaysLeft <= 3 
+                    ? 'from-orange-50 to-red-50 border-orange-200' 
+                    : 'from-blue-50 to-indigo-50 border-blue-200'
+                } border rounded-lg p-4`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className={`rounded-full p-2 ${
+                        trialDaysLeft <= 3 ? 'bg-orange-100' : 'bg-blue-100'
+                      }`}>
+                        <Calendar className={`h-6 w-6 ${
+                          trialDaysLeft <= 3 ? 'text-orange-600' : 'text-blue-600'
+                        }`} />
+                      </div>
+                      <div>
+                        <h3 className={`font-semibold text-lg ${
+                          trialDaysLeft <= 3 ? 'text-orange-800' : 'text-blue-800'
+                        }`}>
+                          {trialDaysLeft <= 3 ? '⚠️ Teste terminando!' : '🎉 Teste Grátis Ativo'}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {trialDaysLeft <= 3 
+                            ? `Apenas ${trialDaysLeft} dias restantes` 
+                            : `${trialDaysLeft} dias de teste gratuito`
+                          }
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-green-600">Grátis</p>
+                      <p className="text-sm text-muted-foreground">até {new Date(trialEndDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</p>
+                    </div>
                   </div>
                 </div>
-
-                {/* Informações de validade */}
-                <div className="space-y-2">
-                  <Label>
-                    {isPremium ? 'Renovação' : isTrialActive ? 'Teste expira em' : 'Teste expirou'}
-                  </Label>
-                  <div className="p-3 rounded-lg bg-muted">
-                    {isTrialActive ? (
-                      <span className={trialDaysLeft <= 3 ? 'text-red-600 font-semibold' : ''}>
-                        {trialDaysLeft} dias
-                      </span>
-                    ) : trialEndDate ? (
-                      <span className="text-sm">
-                        {new Date(trialEndDate).toLocaleDateString('pt-BR')}
-                      </span>
-                    ) : (
-                      <span className="text-sm">-</span>
-                    )}
+              ) : (
+                // Usuario com Teste Expirado
+                <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-red-100 rounded-full p-2">
+                        <Shield className="h-6 w-6 text-red-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-red-800 text-lg">🚫 Acesso Limitado</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Seu teste gratuito expirou em {new Date(trialEndDate).toLocaleDateString('pt-BR')}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-semibold text-red-600">Limitado</p>
+                      <p className="text-sm text-muted-foreground">funcionalidades básicas</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              {/* Ações */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                {!isPremium && (
+              {/* Ação Inteligente Principal */}
+              <div className="space-y-3">
+                {isPremium ? (
+                  // Usuario Premium - Botão de renovação
+                  <div className="text-center space-y-3">
+                    <p className="text-muted-foreground">
+                      Obrigado por ser Premium! Renove sua assinatura quando necessário.
+                    </p>
+                    <Button 
+                      onClick={() => setShowSubscriptionModal(true)}
+                      size="lg"
+                      className="w-full text-lg py-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      <Crown className="h-5 w-5 mr-2" />
+                      ✨ Renovar Assinatura
+                    </Button>
+                  </div>
+                ) : (
+                  // Usuario não-premium - Botão de ação principal
                   <Button 
                     onClick={() => setShowSubscriptionModal(true)}
-                    className="bg-gradient-magical text-white hover:opacity-90 flex-1"
+                    size="lg"
+                    className={`w-full text-lg py-4 ${
+                      isTrialActive 
+                        ? trialDaysLeft <= 3 
+                          ? 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600' 
+                          : 'bg-gradient-magical hover:opacity-90'
+                        : 'bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70'
+                    } text-white shadow-lg hover:shadow-xl transition-all duration-300`}
                   >
-                    <Crown className="h-4 w-4 mr-2" />
-                    {isTrialActive ? 'Assinar Premium' : 'Reativar Premium'}
+                    <Crown className="h-5 w-5 mr-2" />
+                    {isTrialActive 
+                      ? trialDaysLeft <= 3 
+                        ? `🔥 Assinar Agora (${trialDaysLeft} dias restantes)`
+                        : '✨ Assinar Premium'
+                      : '🚀 Reativar Premium'
+                    }
                   </Button>
                 )}
-                
-                {isPremium && (
-                  <Button variant="outline" className="flex-1">
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Gerenciar Assinatura
-                  </Button>
+
+                {/* Informações adicionais */}
+                {!isPremium && (
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
+                      <span className="flex items-center space-x-1">
+                        <CheckCircle className="h-4 w-4 text-success" />
+                        <span>Cancele quando quiser</span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <CheckCircle className="h-4 w-4 text-success" />
+                        <span>Dados seguros</span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <CheckCircle className="h-4 w-4 text-success" />
+                        <span>R$ 9,90/mês ou R$ 99,00/ano</span>
+                      </span>
+                    </div>
+                  </div>
                 )}
-                
-                <Button variant="ghost" className="flex-1">
-                  Ver Histórico de Pagamentos
-                </Button>
               </div>
             </CardContent>
           </Card>
 
-          {/* Aparência */}
-          <Card className="shadow-magical">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Palette className="h-5 w-5 text-primary" />
-                <span>Aparência</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="dark-mode">Modo Escuro</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Ativar tema escuro para melhor visualização noturna
-                  </p>
-                </div>
-                <Switch id="dark-mode" />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="animations">Animações</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Habilitar animações e transições suaves
-                  </p>
-                </div>
-                <Switch id="animations" defaultChecked />
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Notificações */}
           <Card className="shadow-magical">
@@ -213,36 +249,6 @@ const SettingsPage = () => {
             </CardContent>
           </Card>
 
-          {/* Privacidade e Segurança */}
-          <Card className="shadow-magical">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="h-5 w-5 text-primary" />
-                <span>Privacidade e Segurança</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="biometric-auth">Autenticação Biométrica</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Usar impressão digital ou Face ID para acessar o app
-                  </p>
-                </div>
-                <Switch id="biometric-auth" />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="data-backup">Backup Automático</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Fazer backup dos seus dados automaticamente
-                  </p>
-                </div>
-                <Switch id="data-backup" defaultChecked />
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Conta */}
           <Card className="shadow-magical">

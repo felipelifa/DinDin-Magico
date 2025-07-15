@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Receipt, Trash2, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
+import PremiumGuard from "./PremiumGuard";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDateContext } from "@/contexts/DateContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -210,13 +211,14 @@ const TransactionHistory = () => {
   }
 
   return (
-    <Card className="shadow-magical">
-      <CardHeader>
-        <div className="space-y-4">
-          <CardTitle className="flex items-center space-x-2">
-            <Receipt className="h-5 w-5 text-accent" />
-            <span className="text-base md:text-lg">Histórico de Movimentações</span>
-          </CardTitle>
+    <PremiumGuard feature="histórico completo de transações">
+      <Card className="shadow-magical">
+        <CardHeader>
+          <div className="space-y-4">
+            <CardTitle className="flex items-center space-x-2">
+              <Receipt className="h-5 w-5 text-accent" />
+              <span className="text-base md:text-lg">Histórico de Movimentações</span>
+            </CardTitle>
 
           <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
             {/* Toggle entre mês atual e histórico completo */}
@@ -383,6 +385,7 @@ const TransactionHistory = () => {
         )}
       </CardContent>
     </Card>
+    </PremiumGuard>
   );
 };
 

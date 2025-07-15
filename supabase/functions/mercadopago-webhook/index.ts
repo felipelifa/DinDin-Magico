@@ -63,8 +63,24 @@ serve(async (req) => {
 
     // If payment was approved, update user profile
     if (status === 'approved') {
+      // Get subscription details to determine plan type
+      const { data: subscription } = await supabaseClient
+        .from('subscriptions')
+        .select('plan_type')
+        .eq('user_id', userId)
+        .eq('mercadopago_payment_id', payment.preference_id)
+        .single();
+
       const expiresAt = new Date();
-      expiresAt.setMonth(expiresAt.getMonth() + 1); // Add 1 month
+      
+      // Add time based on plan type
+      if (subscription?.plan_type === 'yearly') {
+        expiresAt.setFullYear(expiresAt.getFullYear() + 1); // Add 1 year for yearly plans
+        console.log(`Yearly subscription activated for user ${userId} - expires at:`, expiresAt);
+      } else {
+        expiresAt.setMonth(expiresAt.getMonth() + 1); // Add 1 month for monthly plans
+        console.log(`Monthly subscription activated for user ${userId} - expires at:`, expiresAt);
+      }
 
       const { error: profileError } = await supabaseClient
         .from('profiles')

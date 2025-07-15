@@ -53,9 +53,9 @@ serve(async (req) => {
         }
       ],
       back_urls: {
-        success: `${Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '.lovable.app')}/dashboard?payment=success`,
-        failure: `${Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '.lovable.app')}/dashboard?payment=failure`,
-        pending: `${Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '.lovable.app')}/dashboard?payment=pending`,
+        success: 'https://dindinmagico.netlify.app/dashboard?payment=success',
+        failure: 'https://dindinmagico.netlify.app/dashboard?payment=failure',
+        pending: 'https://dindinmagico.netlify.app/dashboard?payment=pending',
       },
       notification_url: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mercadopago-webhook`,
       external_reference: user.id,

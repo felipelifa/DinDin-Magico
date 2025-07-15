@@ -62,6 +62,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
       }).eq('id', user.id);
 
       setShowCelebration(true);
+      
       setTimeout(() => {
         onComplete();
       }, 3000);
@@ -78,10 +79,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
   if (showCelebration) {
     return (
-      <div
-        className="fixed inset-0 bg-gradient-magical flex items-center justify-center z-50 overflow-y-auto py-20 sm:py-12"
-        style={{ minHeight: "100dvh" }}
-      >
+      <div className="fixed inset-0 bg-gradient-magical flex items-center justify-center z-50">
         <div className="text-center text-white animate-scale-in">
           <div className="text-8xl mb-4 animate-bounce">✨</div>
           <h1 className="text-4xl font-bold mb-4">
@@ -107,11 +105,8 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
   const progress = (step / 3) * 100;
 
   return (
-    <div
-      className="fixed inset-0 bg-gradient-to-br from-primary/20 to-accent/20 backdrop-blur-sm flex items-center justify-center z-50 overflow-y-auto py-20 sm:py-12"
-      style={{ minHeight: "100dvh" }}
-    >
-      <Card className="w-full max-w-2xl mx-auto animate-fade-in">
+    <div className="fixed inset-0 bg-gradient-to-br from-primary/20 to-accent/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <Card className="w-full max-w-2xl animate-fade-in">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="h-8 w-8 text-primary" />

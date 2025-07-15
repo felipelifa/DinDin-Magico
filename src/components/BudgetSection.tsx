@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calculator, Calendar, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from "lucide-react";
 import FinancialCalendar from "./FinancialCalendar";
+import PremiumGuard from "./PremiumGuard";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDateContext } from "@/contexts/DateContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -253,21 +254,23 @@ const BudgetSection = ({ totalSpent, budget, onBudgetUpdate, onTotalSpentUpdate 
       </div>
 
       {/* Gestão Financeira */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center space-x-2">
-              <Calculator className="h-5 w-5 text-primary" />
-              <span>Gestão Financeira</span>
-            </CardTitle>
-            
-            <Badge variant="outline">Gestão Financeira</Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <FinancialCalendar />
-        </CardContent>
-      </Card>
+      <PremiumGuard feature="calendário financeiro avançado">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center space-x-2">
+                <Calculator className="h-5 w-5 text-primary" />
+                <span>Gestão Financeira</span>
+              </CardTitle>
+              
+              <Badge variant="outline">Gestão Financeira</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <FinancialCalendar />
+          </CardContent>
+        </Card>
+      </PremiumGuard>
     </div>
   );
 };
